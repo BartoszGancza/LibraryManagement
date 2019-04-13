@@ -1,7 +1,3 @@
-//
-// Created by Bartosz Gańcza on 2019-04-11.
-//
-
 #ifndef LIBRARYMANAGEMENT_MEMBER_H
 #define LIBRARYMANAGEMENT_MEMBER_H
 

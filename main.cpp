@@ -10,7 +10,7 @@
 using namespace std;
 
 enum flags {
-    mainMenu, newMember = 4, newBook = 3, memberList = 2, bookList = 1, quit = 5
+    mainMenu, newMember = 4, newBook = 3, memberList = 2, bookList = 1, borrowBook = 5, quit = 6
 };
 
 int main() {
@@ -31,10 +31,13 @@ int main() {
                 manager.AddBook();
                 break;
             case memberList:
-                manager.ShowMembers();
+                manager.MemberDetails();
                 break;
             case bookList:
-                manager.ShowBooks();
+                manager.BookDetails();
+                break;
+            case borrowBook:
+                manager.BorrowBook();
                 break;
             case quit:
                 exit(0);

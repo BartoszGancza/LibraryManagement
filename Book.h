@@ -1,7 +1,3 @@
-//
-// Created by Bartosz Gańcza on 2019-04-11.
-//
-
 #ifndef LIBRARYMANAGEMENT_BOOK_H
 #define LIBRARYMANAGEMENT_BOOK_H
 
@@ -32,6 +28,8 @@ public:
     void changeISBN(string newISBN) { bookNumber = move(newISBN); }
 
     void changeTitle(string newTitle) { title = move(newTitle); }
+
+    string showTitle() { return title; }
 };
 
 #endif //LIBRARYMANAGEMENT_BOOK_H
