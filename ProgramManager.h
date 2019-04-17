@@ -3,9 +3,11 @@
 
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <cctype>
 #include "Book.h"
 #include "Member.h"
+#include "WindowManager.h"
 
 using namespace std;
 
@@ -13,6 +15,7 @@ class ProgramManager {
 private:
     vector<Member> members;
     vector<Book> books;
+    stringstream stream;
 public:
     ProgramManager() = default;
 
@@ -30,7 +33,7 @@ public:
         }
     }
 
-    void BorrowBook() {
+    void BorrowBook(WindowManager &window) {
         string choiceMember, choiceBook;
 
         cout << "Input \"q\" at any time to go back to Main Menu." << endl << "Who is borrowing the book?" << endl;
@@ -47,15 +50,18 @@ public:
 
     }
 
-    void AddBook() {
+    void AddBook(WindowManager &window) {
         string isbn, title, genre;
 
-        cout << "Please enter the book title: ";
+        stream << "Please enter the book title: ";
+        window.displayWindow(stream.str());
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, title, '\n');
-        cout << "Enter the ISBN number: ";
+        stream << "Enter the ISBN number: ";
+        window.displayWindow(stream.str());
         getline(cin, isbn, '\n');
-        cout << "Enter the genre: ";
+        stream << "Enter the genre: ";
+        window.displayWindow(stream.str());
         getline(cin, genre, '\n');
         books.emplace_back(Book(isbn, genre, title));
     }
@@ -104,9 +110,10 @@ public:
         books[stoi(choice) - 1].showDetails();
     }
 
-    void ShowMainMenu() {
-        cout << "1. Show list of all books" << endl << "2. Show list of all members" << endl << "3. Add a new book"
-             << endl << "4. Add a new member" << endl << "5. Borrow a book" << endl << "6. Quit" << endl;
+    void ShowMainMenu(WindowManager &window) {
+        stream << "1. Show list of all books" << endl << "2. Show list of all members" << endl << "3. Add a new book"
+               << endl << "4. Add a new member" << endl << "5. Borrow a book" << endl << "6. Quit" << endl;
+        window.displayWindow(stream.str());
     }
 };
 
