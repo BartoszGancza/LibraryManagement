@@ -8,8 +8,8 @@ using namespace std;
 
 class Member {
 private:
-    string name, address;
-    int age, memberID, borrowedBooks = 0;
+    string name, address, age;
+    int memberID, borrowedBooks = 0;
     static int currID;
 
     static int getCurrID() {
@@ -18,14 +18,14 @@ private:
     }
 
 public:
-    Member(string fullName, string address, int age) : name(move(fullName)), address(move(address)), age(age),
+    Member(string fullName, string address, string age) : name(move(fullName)), address(move(address)), age(age),
                                                        memberID(getCurrID()) {};
 
     void changeName(string newName) { name = move(newName); }
 
     void changeAddress(string newAddress) { address = move(newAddress); }
 
-    void changeAge(int newAge) { age = newAge; }
+    void changeAge(string newAge) { age = newAge; }
 
     void showDetails() {
         cout << "ID: " << memberID << endl << "Name: " << name << endl << "Address: " <<

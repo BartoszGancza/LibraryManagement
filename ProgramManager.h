@@ -38,6 +38,7 @@ public:
 
         cout << "Input \"q\" at any time to go back to Main Menu." << endl << "Who is borrowing the book?" << endl;
         ListOfMembers();
+        window.grabText("Who is borrowing the book?");
         cout << "Member ID: ";
         cin >> choiceMember;
         if ("q" == choiceMember) { return; }
@@ -46,37 +47,25 @@ public:
         cout << "Book ID: ";
         cin >> choiceBook;
         if ("q" == choiceBook) { return; }
-        /*TODO: Finish the function*/
+        /*TODO: Finish the function, and rework it for the GUI version*/
 
     }
 
     void AddBook(WindowManager &window) {
         string isbn, title, genre;
 
-        stream << "Please enter the book title: ";
-        window.displayWindow(stream.str());
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, title, '\n');
-        stream << "Enter the ISBN number: ";
-        window.displayWindow(stream.str());
-        getline(cin, isbn, '\n');
-        stream << "Enter the genre: ";
-        window.displayWindow(stream.str());
-        getline(cin, genre, '\n');
+        title = window.grabText("Please enter the book title: ");
+        isbn = window.grabText("Enter the ISBN number: ");
+        genre = window.grabText("Enter the genre: ");
         books.emplace_back(Book(isbn, genre, title));
     }
 
-    void AddMember() {
-        string name, address;
-        int age;
+    void AddMember(WindowManager &window) {
+        string name, address, age;
 
-        cout << "Enter new members full name: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, name, '\n');
-        cout << "Enter their address: ";
-        getline(cin, address, '\n');
-        cout << "Enter their age: ";
-        cin >> age;
+        name = window.grabText("Enter new members full name: ");
+        address = window.grabText("Enter their address: ");
+        age = window.grabText("Enter their age: ");
         members.emplace_back(Member(name, address, age));
     }
 
@@ -93,6 +82,7 @@ public:
             if ("q" == choice) { return; }
         }
         members[stoi(choice) - 1].showDetails();
+        /*TODO: Rework for the GUI version*/
     }
 
     void BookDetails() {
@@ -108,12 +98,16 @@ public:
             if ("q" == choice) { return; }
         }
         books[stoi(choice) - 1].showDetails();
+        /*TODO: Reework for the GUI version*/
     }
 
-    void ShowMainMenu(WindowManager &window) {
+    int ShowMainMenu(WindowManager &window) {
+        string choice;
         stream << "1. Show list of all books" << endl << "2. Show list of all members" << endl << "3. Add a new book"
-               << endl << "4. Add a new member" << endl << "5. Borrow a book" << endl << "6. Quit" << endl;
-        window.displayWindow(stream.str());
+               << endl << "4. Add a new member" << endl << "5. Borrow a book" << endl << "6. Quit" << endl << endl
+               << "What would you like to do: ";
+        choice = window.grabText(stream.str());
+        return stoi(choice);
     }
 };
 

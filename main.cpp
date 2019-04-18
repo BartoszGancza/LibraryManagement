@@ -16,21 +16,21 @@ enum flags {
 };
 
 int main(int argc, char *argv[]) {
+    ProgramManager manager;
+    WindowManager window = WindowManager("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
+                                         SDL_WINDOW_SHOWN);
+    window.init();
 
-    /*ProgramManager manager;
-    int flag = 0;
+    int flag;
     cout << "Welcome to the library management system!" << endl;
     while (true) {
-        cout << endl << "MAIN MENU" << endl;
-        manager.ShowMainMenu();
-        cout << "What would you like to do: ";
-        cin >> flag;
+        flag = manager.ShowMainMenu(window);
         switch (flag) {
             case newMember:
-                manager.AddMember();
+                manager.AddMember(window);
                 break;
             case newBook:
-                manager.AddBook();
+                manager.AddBook(window);
                 break;
             case memberList:
                 manager.MemberDetails();
@@ -38,25 +38,17 @@ int main(int argc, char *argv[]) {
             case bookList:
                 manager.BookDetails();
                 break;
-            case borrowBook:
+            /*case borrowBook:
                 manager.BorrowBook();
-                break;
+                break;*/
             case quit:
+                window.freeResources();
                 exit(0);
             default:
-                manager.ShowMainMenu();
+                manager.ShowMainMenu(window);
                 break;
         }
-    }*/
-
-    WindowManager window = WindowManager("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
-                                         SDL_WINDOW_SHOWN);
-
-    window.init();
-    ProgramManager manager;
-    manager.ShowMainMenu(window);
-    window.freeResources();
-
+    }
 
     return 0;
 }
