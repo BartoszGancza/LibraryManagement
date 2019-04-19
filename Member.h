@@ -2,6 +2,7 @@
 #define LIBRARYMANAGEMENT_MEMBER_H
 
 #include <string>
+#include <sstream>
 #include <iostream>
 
 using namespace std;
@@ -19,7 +20,7 @@ private:
 
 public:
     Member(string fullName, string address, string age) : name(move(fullName)), address(move(address)), age(age),
-                                                       memberID(getCurrID()) {};
+                                                          memberID(getCurrID()) {};
 
     void changeName(string newName) { name = move(newName); }
 
@@ -27,14 +28,21 @@ public:
 
     void changeAge(string newAge) { age = newAge; }
 
-    void showDetails() {
-        cout << "ID: " << memberID << endl << "Name: " << name << endl << "Address: " <<
-             address << endl << "Age: " << age << endl << "Number of borrowed books: " << borrowedBooks << endl;
+    string showDetails() {
+        stringstream details;
+        details << "ID: " << memberID << endl << "Name: " << name << endl << "Address: " <<
+                address << endl << "Age: " << age << endl << "Number of borrowed books: " << borrowedBooks << endl
+                << "Input \"q\" to go back to Main Menu: ";
+        return details.str();
     }
 
     string showName() { return name; }
 
     int showID() { return memberID; }
+
+    void borrowBook() { borrowedBooks++; }
+
+    void returnBook() { borrowedBooks--; }
 
     int showBorrowedBooks() { return borrowedBooks; }
 

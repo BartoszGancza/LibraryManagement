@@ -33,14 +33,14 @@ int main(int argc, char *argv[]) {
                 manager.AddBook(window);
                 break;
             case memberList:
-                manager.MemberDetails();
+                manager.MemberDetails(window);
                 break;
             case bookList:
-                manager.BookDetails();
+                manager.BookDetails(window);
                 break;
-            /*case borrowBook:
-                manager.BorrowBook();
-                break;*/
+            case borrowBook:
+                manager.BorrowBook(window);
+                break;
             case quit:
                 window.freeResources();
                 exit(0);

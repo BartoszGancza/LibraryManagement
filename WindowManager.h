@@ -48,7 +48,7 @@ public:
         SDL_Quit();
     }
 
-    string grabText(const string &prompt) {
+    string grabInput(const string &prompt) {
         bool quit = false;
         SDL_Event e;
         string collectInput;

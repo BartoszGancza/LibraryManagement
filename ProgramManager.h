@@ -19,94 +19,121 @@ private:
 public:
     ProgramManager() = default;
 
-    void ListOfBooks() {
+    string ListOfBooks() {
         int counter = 0;
+        stringstream temp;
         for (auto book : books) {
-            cout << ++counter << ". " << book.showTitle() << endl;
+            temp << ++counter << ". " << book.showTitle() << endl;
         }
+        return temp.str();
     }
 
-    void ListOfMembers() {
+    string ListOfMembers() {
         int counter = 0;
+        stringstream temp;
         for (auto member : members) {
-            cout << ++counter << ". " << member.showName() << endl;
+            temp << ++counter << ". " << member.showName() << endl;
         }
+        return temp.str();
     }
 
     void BorrowBook(WindowManager &window) {
-        string choiceMember, choiceBook;
+        string choiceMember, choiceBook, booksList, membersList;
 
-        cout << "Input \"q\" at any time to go back to Main Menu." << endl << "Who is borrowing the book?" << endl;
-        ListOfMembers();
-        window.grabText("Who is borrowing the book?");
-        cout << "Member ID: ";
-        cin >> choiceMember;
+        stream.str("");
+
+        stream << "Input \"q\" at any time to go back to Main Menu." << endl << "Who is borrowing the book?" << endl;
+        membersList = ListOfMembers();
+        choiceMember = window.grabInput(stream.str() + membersList + "Member ID: ");
         if ("q" == choiceMember) { return; }
-        cout << "Select the book:" << endl;
-        ListOfBooks();
-        cout << "Book ID: ";
-        cin >> choiceBook;
+        while (stoi(choiceMember) - 1 >= members.size() || stoi(choiceMember) < 1) {
+            stream.str("");
+            stream << "There is no member with this ID, please try again or \"q\" to quit: ";
+            choiceMember = window.grabInput(membersList + stream.str());
+            if ("q" == choiceMember) { return; }
+        }
+        stream.str("");
+        stream << "Which book?" << endl;
+        booksList = ListOfBooks();
+        choiceBook = window.grabInput(stream.str() + booksList + "Book ID: ");
         if ("q" == choiceBook) { return; }
-        /*TODO: Finish the function, and rework it for the GUI version*/
-
+        while (stoi(choiceBook) - 1 >= books.size() || stoi(choiceBook) < 1) {
+            stream.str("");
+            stream << "There is no book with this ID, please try again or \"q\" to quit: ";
+            choiceBook = window.grabInput(booksList + stream.str());
+            if ("q" == choiceBook) { return; }
+        }
+        books[stoi(choiceBook) - 1].lend(members[stoi(choiceMember) - 1]);
     }
 
     void AddBook(WindowManager &window) {
         string isbn, title, genre;
 
-        title = window.grabText("Please enter the book title: ");
-        isbn = window.grabText("Enter the ISBN number: ");
-        genre = window.grabText("Enter the genre: ");
+        title = window.grabInput("Please enter the book title: ");
+        isbn = window.grabInput("Enter the ISBN number: ");
+        genre = window.grabInput("Enter the genre: ");
         books.emplace_back(Book(isbn, genre, title));
     }
 
     void AddMember(WindowManager &window) {
         string name, address, age;
 
-        name = window.grabText("Enter new members full name: ");
-        address = window.grabText("Enter their address: ");
-        age = window.grabText("Enter their age: ");
+        name = window.grabInput("Enter new members full name: ");
+        address = window.grabInput("Enter their address: ");
+        age = window.grabInput("Enter their age: ");
         members.emplace_back(Member(name, address, age));
     }
 
-    void MemberDetails() {
-        string choice;
+    void MemberDetails(WindowManager &window) {
+        string choice, flag, list;
 
-        ListOfMembers();
-        cout << "To check member details, input the member ID number. To go back to main menu input \"q\": ";
-        cin >> choice;
+        stream.str("");
+
+        list = ListOfMembers();
+        stream << "To check member details, input the member ID number. To go back to main menu input \"q\": ";
+        choice = window.grabInput(list + stream.str());
         if ("q" == choice) { return; }
         while (stoi(choice) - 1 >= members.size() || stoi(choice) < 1) {
-            cout << "There is no member with this ID, please try again or \"q\" to quit: ";
-            cin >> choice;
+            stream.str("");
+            stream << "There is no member with this ID, please try again or \"q\" to quit: ";
+            choice = window.grabInput(list + stream.str());
             if ("q" == choice) { return; }
         }
-        members[stoi(choice) - 1].showDetails();
-        /*TODO: Rework for the GUI version*/
+        do {
+           flag = window.grabInput(members[stoi(choice) - 1].showDetails());
+        } while (flag != "q");
     }
 
-    void BookDetails() {
-        string choice;
+    void BookDetails(WindowManager &window) {
+        string choice, flag, list;
 
-        ListOfBooks();
-        cout << "To check book details, input the book number. To go back to main menu input \"q\": ";
-        cin >> choice;
+        stream.str("");
+
+        list = ListOfBooks();
+        stream << "To check book details, input the book number. To go back to main menu input \"q\": ";
+        choice = window.grabInput(list + stream.str());
         if ("q" == choice) { return; }
         while (stoi(choice) - 1 >= books.size() || stoi(choice) < 1) {
-            cout << "There is no book with this ID, please try again or \"q\" to quit: ";
-            cin >> choice;
+            stream.str("");
+            stream << "There is no book with this ID, please try again or \"q\" to quit: ";
+            choice = window.grabInput(list + stream.str());
             if ("q" == choice) { return; }
         }
-        books[stoi(choice) - 1].showDetails();
-        /*TODO: Reework for the GUI version*/
+        do {
+            flag = window.grabInput(books[stoi(choice) - 1].showDetails());
+        } while (flag != "q");
     }
 
     int ShowMainMenu(WindowManager &window) {
         string choice;
+        // Clear stream before proceeding
+        stream.str("");
+
         stream << "1. Show list of all books" << endl << "2. Show list of all members" << endl << "3. Add a new book"
                << endl << "4. Add a new member" << endl << "5. Borrow a book" << endl << "6. Quit" << endl << endl
                << "What would you like to do: ";
-        choice = window.grabText(stream.str());
+        choice = window.grabInput(stream.str());
+
         return stoi(choice);
     }
 };
