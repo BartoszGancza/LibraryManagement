@@ -18,7 +18,7 @@ public:
     string showDetails() {
         stringstream details;
         details << "ISBN: " << bookNumber << endl << "Title: " << title << endl << "Genre: " << genre << endl
-                << "Input \"q\" to go back to Main Menu: ";
+                << "Push ESC to go back to Main Menu.";
         return details.str();
     }
 

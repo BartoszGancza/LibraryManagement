@@ -32,7 +32,7 @@ public:
         stringstream details;
         details << "ID: " << memberID << endl << "Name: " << name << endl << "Address: " <<
                 address << endl << "Age: " << age << endl << "Number of borrowed books: " << borrowedBooks << endl
-                << "Input \"q\" to go back to Main Menu: ";
+                << "Push ESC to go back to Main Menu.";
         return details.str();
     }
 

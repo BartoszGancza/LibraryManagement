@@ -19,54 +19,55 @@ private:
 public:
     ProgramManager() = default;
 
-    string ListOfBooks() {
+    vector<string> listOfBooks() {
         int counter = 0;
+        vector<string> list;
         stringstream temp;
+        string text;
         for (auto book : books) {
             temp << ++counter << ". " << book.showTitle() << endl;
+            text = temp.str();
+            list.emplace_back(text);
         }
-        return temp.str();
+        return list;
     }
 
-    string ListOfMembers() {
+    vector<string> listOfMembers() {
         int counter = 0;
         stringstream temp;
+        string text;
+        vector<string> list;
         for (auto member : members) {
             temp << ++counter << ". " << member.showName() << endl;
+            text = temp.str();
+            list.emplace_back(text);
         }
-        return temp.str();
+        return list;
     }
 
-    void BorrowBook(WindowManager &window) {
-        string choiceMember, choiceBook, booksList, membersList;
+    void borrowBook(WindowManager &window) {
+        int choiceMember, choiceBook;
+        vector<string> booksList = listOfBooks(), membersList = listOfMembers();
+        vector<SDL_Rect> positions;
 
         stream.str("");
 
-        stream << "Input \"q\" at any time to go back to Main Menu." << endl << "Who is borrowing the book?" << endl;
-        membersList = ListOfMembers();
-        choiceMember = window.grabInput(stream.str() + membersList + "Member ID: ");
-        if ("q" == choiceMember) { return; }
-        while (stoi(choiceMember) - 1 >= members.size() || stoi(choiceMember) < 1) {
-            stream.str("");
-            stream << "There is no member with this ID, please try again or \"q\" to quit: ";
-            choiceMember = window.grabInput(membersList + stream.str());
-            if ("q" == choiceMember) { return; }
-        }
+        stream << "Push ESC at any time to go back to main menu." << endl << "Who is borrowing the book?" << endl;
+        positions = window.renderMenu(membersList, stream.str());
+        choiceMember = window.trackMouse(positions);
+        if (-1 == choiceMember) { return; }
         stream.str("");
         stream << "Which book?" << endl;
-        booksList = ListOfBooks();
-        choiceBook = window.grabInput(stream.str() + booksList + "Book ID: ");
-        if ("q" == choiceBook) { return; }
-        while (stoi(choiceBook) - 1 >= books.size() || stoi(choiceBook) < 1) {
-            stream.str("");
-            stream << "There is no book with this ID, please try again or \"q\" to quit: ";
-            choiceBook = window.grabInput(booksList + stream.str());
-            if ("q" == choiceBook) { return; }
-        }
-        books[stoi(choiceBook) - 1].lend(members[stoi(choiceMember) - 1]);
+        positions = window.renderMenu(booksList, stream.str());
+        choiceBook = window.trackMouse(positions);
+        if (-1 == choiceBook) { return; }
+        books[choiceBook].lend(members[choiceMember]);
+        window.renderTextTexture(
+                books[choiceBook].showTitle() + " has been lent to " + members[choiceMember].showName() + ".");
+        SDL_Delay(1500);
     }
 
-    void AddBook(WindowManager &window) {
+    void addBook(WindowManager &window) {
         string isbn, title, genre;
 
         title = window.grabInput("Please enter the book title: ");
@@ -75,7 +76,7 @@ public:
         books.emplace_back(Book(isbn, genre, title));
     }
 
-    void AddMember(WindowManager &window) {
+    void addMember(WindowManager &window) {
         string name, address, age;
 
         name = window.grabInput("Enter new members full name: ");
@@ -84,57 +85,48 @@ public:
         members.emplace_back(Member(name, address, age));
     }
 
-    void MemberDetails(WindowManager &window) {
-        string choice, flag, list;
+    void memberDetails(WindowManager &window) {
+        int choice;
+        string flag;
+        vector<string> list = listOfMembers();
+        vector<SDL_Rect> positions;
 
         stream.str("");
 
-        list = ListOfMembers();
-        stream << "To check member details, input the member ID number. To go back to main menu input \"q\": ";
-        choice = window.grabInput(list + stream.str());
-        if ("q" == choice) { return; }
-        while (stoi(choice) - 1 >= members.size() || stoi(choice) < 1) {
-            stream.str("");
-            stream << "There is no member with this ID, please try again or \"q\" to quit: ";
-            choice = window.grabInput(list + stream.str());
-            if ("q" == choice) { return; }
-        }
-        do {
-           flag = window.grabInput(members[stoi(choice) - 1].showDetails());
-        } while (flag != "q");
+        stream << "To check member details, click on the name or push ESC to go back to main menu.";
+        positions = window.renderMenu(list, stream.str());
+        choice = window.trackMouse(positions);
+        if (-1 == choice) { return; }
+        window.renderTextTexture(members[choice].showDetails());
+        window.trackMouse();
     }
 
-    void BookDetails(WindowManager &window) {
-        string choice, flag, list;
+    void bookDetails(WindowManager &window) {
+        int choice;
+        string flag;
+        vector<string> list = listOfBooks();
+        vector<SDL_Rect> positions;
 
         stream.str("");
 
-        list = ListOfBooks();
-        stream << "To check book details, input the book number. To go back to main menu input \"q\": ";
-        choice = window.grabInput(list + stream.str());
-        if ("q" == choice) { return; }
-        while (stoi(choice) - 1 >= books.size() || stoi(choice) < 1) {
-            stream.str("");
-            stream << "There is no book with this ID, please try again or \"q\" to quit: ";
-            choice = window.grabInput(list + stream.str());
-            if ("q" == choice) { return; }
-        }
-        do {
-            flag = window.grabInput(books[stoi(choice) - 1].showDetails());
-        } while (flag != "q");
+        stream << "To check book details, click on the name or push ESC to go back to main menu.";
+        positions = window.renderMenu(list, stream.str());
+        choice = window.trackMouse(positions);
+        if (-1 == choice) { return; }
+        window.renderTextTexture(books[choice].showDetails());
+        window.trackMouse();
     }
 
-    int ShowMainMenu(WindowManager &window) {
-        string choice;
-        // Clear stream before proceeding
-        stream.str("");
+    int showMainMenu(WindowManager &window) {
+        int choice;
+        vector<SDL_Rect> positions;
+        vector<string> menuItems{"1. Show list of all books", "2. Show list of all members", "3. Add a new book",
+                                 "4. Add a new member", "5. Borrow a book", "6. Quit"};
 
-        stream << "1. Show list of all books" << endl << "2. Show list of all members" << endl << "3. Add a new book"
-               << endl << "4. Add a new member" << endl << "5. Borrow a book" << endl << "6. Quit" << endl << endl
-               << "What would you like to do: ";
-        choice = window.grabInput(stream.str());
+        positions = window.renderMenu(menuItems, "Welcome to library management interface!");
+        choice = window.trackMouse(positions);
 
-        return stoi(choice);
+        return choice;
     }
 };
 

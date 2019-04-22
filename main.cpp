@@ -24,31 +24,29 @@ int main(int argc, char *argv[]) {
     int flag;
     cout << "Welcome to the library management system!" << endl;
     while (true) {
-        flag = manager.ShowMainMenu(window);
+        flag = manager.showMainMenu(window) + 1;
         switch (flag) {
             case newMember:
-                manager.AddMember(window);
+                manager.addMember(window);
                 break;
             case newBook:
-                manager.AddBook(window);
+                manager.addBook(window);
                 break;
             case memberList:
-                manager.MemberDetails(window);
+                manager.memberDetails(window);
                 break;
             case bookList:
-                manager.BookDetails(window);
+                manager.bookDetails(window);
                 break;
             case borrowBook:
-                manager.BorrowBook(window);
+                manager.borrowBook(window);
                 break;
             case quit:
                 window.freeResources();
                 exit(0);
             default:
-                manager.ShowMainMenu(window);
+                manager.showMainMenu(window);
                 break;
         }
     }
-
-    return 0;
 }
